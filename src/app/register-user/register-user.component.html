@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="mb-32">{{ id ? 'Update User' : 'Register User' }}</h4>
+    <form [formGroup]="userForm">
+      <mat-form-field class="w-100 fs-16" appearance="outline">
+        <mat-label>First Name</mat-label>
+        <input matInput type="text" formControlName="firstName" placeholder="Entre com nome">
+      </mat-form-field>
+
+      <mat-form-field class="w-100 fs-16" appearance="outline">
+        <mat-label>Last Name</mat-label>
+        <input matInput type="text" formControlName="lastName" placeholder="Entre com sobrenome">
+      </mat-form-field>
+
+      <mat-form-field class="w-100 fs-16" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" formControlName="email" placeholder="Entre com email">
+      </mat-form-field>
+
+      <mat-form-field class="w-100 fs-16" appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Entre com senha">
+      </mat-form-field>
+
+      <mat-form-field class="w-100 fs-16" appearance="outline">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option value="USER">Usuário</mat-option>
+          <mat-option value="ADMIN">Administrador</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="alert alert-success alert-text-success d-flex fs-14 align-items-center rounded mb-16" role="alert" *ngIf="message">
+        <i-feather name="check-circle" class="text-success feather-base me-12"></i-feather>
+        {{ id ? 'Usuário atualizado com sucesso!' : 'Usuário cadastrado com sucesso!' }}
+      </div>
+      <button mat-raised-button class="me-8 mb-8 cl"  color="primary" [disabled]="userForm.invalid" (click)="registerNewUser()" *ngIf="!id">Register User</button>
+      <button mat-raised-button class="me-8 mb-8 cl"  color="primary" [disabled]="userForm.invalid" (click)="updateUser()" *ngIf="id">Update User</button>
+    </form>
+  </div>
+</div>

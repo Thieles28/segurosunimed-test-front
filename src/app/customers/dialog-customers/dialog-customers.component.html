@@ -1,0 +1,31 @@
+<h2 mat-dialog-title class="negrito">Customers</h2>
+<mat-dialog-content class="mat-typography">
+  <h3 class="text-center">Name</h3>
+  <p class="text-center">{{ customer.name }}</p>
+
+  <h3 class="text-center">Email</h3>
+  <p class="text-center">{{ customer.email }}</p>
+
+  <h3 class="text-center">Gender</h3>
+  <p class="text-center">{{ customer.gender }}</p>
+
+  <h3 class="text-center">Addresses</h3>
+  <ng-container *ngFor="let address of customer.addresses">
+    <h3 class="text-center">Street</h3>
+    <p class="text-center">{{ address.street }}</p>
+
+    <h3 class="text-center">City</h3>
+    <p class="text-center">{{ address.city }}</p>
+
+    <h3 class="text-center">State</h3>
+    <p class="text-center">{{ address.state }}</p>
+
+    <h3 class="text-center">Zip</h3>
+    <p class="text-center">{{ address.zipCode }}</p>
+  </ng-container>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Voltar</button>
+</mat-dialog-actions>
+

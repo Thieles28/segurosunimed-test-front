@@ -1,0 +1,59 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="mb-32">{{ id ? 'Update Customer' : 'Register Customer' }}</h4>
+    <form [formGroup]="customerForm">
+      <mat-form-field class="w-100 fs-16" appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" formControlName="name" placeholder="Entre com nome do cliente">
+      </mat-form-field>
+
+      <mat-form-field class="w-100 fs-16" appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" formControlName="email" placeholder="Entre com email do cliente">
+      </mat-form-field>
+
+      <mat-form-field class="w-100 fs-16" appearance="outline">
+        <mat-label>Gender</mat-label>
+        <mat-select formControlName="gender" placeholder="Select gender">
+          <mat-option value="M">Male</mat-option>
+          <mat-option value="F">Female</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div formArrayName="addresses">
+        <div *ngFor="let address of addresses.controls; let i = index">
+          <a class="m-r-8 cursor-pointer" *ngIf="i === 0">
+            <i-feather matTooltip="Add" name="plus" class="mt-n3 feather-base text-dark" (click)="addAddress()"></i-feather>
+          </a>
+          <a class="m-r-8 cursor-pointer" *ngIf="i > 0">
+            <i-feather matTooltip="Remove" name="minus" class="mt-n3 feather-base text-dark" (click)="removeAddress(i)"></i-feather>
+          </a>
+          <div [formGroupName]="i"> <!-- Use formGroupName para acessar os controles do FormGroup -->
+            <mat-form-field class="w-100 fs-16" appearance="outline">
+              <mat-label>ZipCode {{ i + 1 }}</mat-label>
+              <input matInput formControlName="zipCode" placeholder="Entre com o CEP do cliente" (blur)="getZipCodeValue(i)">
+            </mat-form-field>
+            <mat-form-field class="w-100 fs-16" appearance="outline">
+              <mat-label>Street {{ i + 1 }}</mat-label>
+              <input matInput formControlName="street" placeholder="Entre com o logradouro do cliente">
+            </mat-form-field>
+            <mat-form-field class="w-100 fs-16" appearance="outline">
+              <mat-label>City {{ i + 1 }}</mat-label>
+              <input matInput formControlName="city" placeholder="Entre com o cidade do cliente">
+            </mat-form-field>
+            <mat-form-field class="w-100 fs-16" appearance="outline">
+              <mat-label>State {{ i + 1 }}</mat-label>
+              <input matInput formControlName="state" placeholder="Entre com o uf do cliente">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-success alert-text-success d-flex fs-14 align-items-center rounded mb-16" role="alert" *ngIf="mensagem">
+        <i-feather name="check-circle" class="text-success feather-base me-12"></i-feather>
+        {{ id ? 'Cliente atualizado com sucesso!' : 'Cliente cadastrado com sucesso!' }}
+      </div>
+      <button mat-raised-button class="me-8 mb-8 cl"  color="primary" [disabled]="customerForm.invalid" (click)="registerNewCustomers()" *ngIf="!id">Register Customer</button>
+      <button mat-raised-button class="me-8 mb-8 cl"  color="primary" [disabled]="customerForm.invalid" (click)="updateCustomer()" *ngIf="id">Update Customer</button>
+    </form>
+  </div>
+</div>
