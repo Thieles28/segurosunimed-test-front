@@ -36,7 +36,7 @@ export class RegisterUserComponent implements OnInit {
     this.authService.registerUser(this.userForm.value).subscribe(
       (users: Users) => {
         if(users != null) {
-            this.message = true;
+          this.showMessage(3000);
         }
         this.resetForm();
       },
@@ -72,12 +72,20 @@ export class RegisterUserComponent implements OnInit {
     if (this.userForm.valid) {
       this.authService.updateUser(this.id, this.userForm.value).subscribe((user: Users) => {
         if (user != null) {
-          this.message = true;
+          this.showMessage(3000);
           this.userForm.patchValue(user);
           this.router.navigate(['/users']);
         }
       });
     }
+  }
+
+  showMessage(duration: number): void {
+    this.message = true;
+
+    setTimeout(() => {
+      this.message = false;
+    }, duration);
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormControlName, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from '../service/customer.service';
 import { Address } from './../model/address';
@@ -29,7 +29,7 @@ export class RegisterCustomerComponent implements OnInit {
   initializeForm() {
     this.customerForm = this.fb.group({
       name: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       gender: ['', Validators.required],
       addresses: this.fb.array([])
     });
@@ -44,12 +44,12 @@ export class RegisterCustomerComponent implements OnInit {
     return this.addresses.get('zipCode') as FormControl;
   }
 
-  addAddress() {
+  addAddress(address?: Address) {
     const addresFormGroup = this.fb.group({
-      zipCode: ['', Validators.required],
-      street: [{ value: '', disabled: true }, Validators.required],
-      city: [{ value: '', disabled: true }, Validators.required],
-      state: [{ value: '', disabled: true }, Validators.required]
+      zipCode: [address?.zipCode || '', Validators.required],
+      street: [{ value: address?.street || '', disabled: true }, Validators.required],
+      city: [{ value: address?.city || '', disabled: true }, Validators.required],
+      state: [{ value: address?.state || '', disabled: true }, Validators.required]
     });
     this.addresses.push(addresFormGroup);
   }
@@ -58,12 +58,11 @@ export class RegisterCustomerComponent implements OnInit {
     this.addresses.removeAt(index);
   }
 
-   // Suponha que você tenha um método para acessar um endereço específico pelo índice
-   getAddressFormGroup(index: number): FormGroup {
+
+  getAddressFormGroup(index: number): FormGroup {
     return this.addresses.at(index) as FormGroup;
   }
 
-  // Agora, você pode acessar o valor do zipCode para um endereço específico
   getZipCodeValue(index: number) {
     this.customerService.getAddressCep(this.getAddressFormGroup(index).get('zipCode')?.value).subscribe((viaCep: ViaCep) => {
       this.address.street = viaCep.logradouro;
@@ -77,7 +76,7 @@ export class RegisterCustomerComponent implements OnInit {
     this.customerService.registerNewCustomers(this.customerForm.value).subscribe(
       (customerAdd: Customer) => {
         if(customerAdd != null) {
-            this.mensagem = true;
+          this.showMessage(3000);
         }
         this.resetForm();
       },
@@ -87,13 +86,44 @@ export class RegisterCustomerComponent implements OnInit {
     );
   }
 
-  resetForm() {
-    Object.keys(this.customerForm.controls).forEach(key => {
-      this.customerForm.get(key)?.setValue(null, { onlySelf: true, emitEvent: false });
-      this.customerForm.get(key)?.clearValidators();
-      this.customerForm.get(key)?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
-    });
+  resetControl(control: AbstractControl | null) {
+    if (control) {
+      control.setValue(null);
+      control.clearValidators();
+      control.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    }
+  }
 
+  resetForm() {
+    const addressesArray = this.customerForm.get('addresses') as FormArray;
+
+    if (addressesArray) {
+      addressesArray.controls.forEach((address: AbstractControl) => {
+        if (address instanceof FormGroup) {
+          this.resetControl(address.get('zipCode') as FormControl | null);
+          this.resetControl(address.get('street') as FormControl | null);
+          this.resetControl(address.get('city') as FormControl | null);
+          this.resetControl(address.get('state') as FormControl | null);
+        }
+      });
+    }
+
+    Object.keys(this.customerForm.controls).forEach(key => {
+      const control = this.customerForm.get(key);
+      this.resetControl(control);
+    });
+  }
+
+  resetZipCodes() {
+    const addressesArray = this.customerForm.get('addresses') as FormArray;
+    addressesArray.controls.map((addresses: AbstractControl) => {
+      const zipCode = (addresses as FormGroup).get('zipCode') as FormControl;
+        if (zipCode) {
+          zipCode.setValue(null, { onlySelf: true, emitEvent: false });
+          zipCode.clearValidators();
+          zipCode.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+        }
+    });
   }
 
   private getId() {
@@ -103,7 +133,10 @@ export class RegisterCustomerComponent implements OnInit {
         if (id !== null && id !== undefined) {
           this.id = parseInt(id, 10);
           this.customerService.getRegisterCustomer(this.id).subscribe((customer: Customer) => {
-              this.customerForm.patchValue(customer);
+            this.customerForm.patchValue(customer);
+            customer.addresses.map((address: Address) => {
+              this.addAddress(address);
+            });
           });
         }
       }
@@ -114,7 +147,7 @@ export class RegisterCustomerComponent implements OnInit {
     if (this.customerForm.valid) {
       this.customerService.updateCustomer(this.id, this.customerForm.value).subscribe((customer: Customer) => {
         if (customer != null) {
-          this.mensagem = true;
+          this.showMessage(3000);
           this.customerForm.patchValue(customer);
           this.router.navigate(['/customers']);
         }
@@ -122,4 +155,11 @@ export class RegisterCustomerComponent implements OnInit {
     }
   }
 
+  showMessage(duration: number): void {
+    this.mensagem = true;
+
+    setTimeout(() => {
+      this.mensagem = false;
+    }, duration);
+  }
 }

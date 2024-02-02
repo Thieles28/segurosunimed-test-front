@@ -57,7 +57,7 @@ export class CustomersComponent implements AfterViewInit {
   viewCustomer(id: Number) {
     const dialogRef = this.dialog.open(DialogCustomersComponent, {
       data: { customerId: id},
-      width: '350px'
+      width: '600px'
     });
 
     dialogRef.afterClosed().subscribe(result => {

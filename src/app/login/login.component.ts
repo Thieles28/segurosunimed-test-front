@@ -14,6 +14,7 @@ export class LoginComponent {
 
   declare loginForm: FormGroup;
   incorrectPassword = false;
+  message: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -43,11 +44,20 @@ export class LoginComponent {
       },
       (erro) => {
         console.error('Erro ao autenticar:', erro);
+        this.showMessage(3000)
         if (erro.status === 403) {
           this.loginForm.get('password')?.setErrors({ incorrectPassword: true });
         }
       }
     );
+  }
+
+  showMessage(duration: number): void {
+    this.message = true;
+
+    setTimeout(() => {
+      this.message = false;
+    }, duration);
   }
 
 }

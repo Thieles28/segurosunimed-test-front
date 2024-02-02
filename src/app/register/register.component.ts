@@ -33,7 +33,7 @@ export class RegisterComponent {
       (res: Token) => {
         if(res != null) {
             localStorage.setItem('token', res.token);
-            this.message = true;
+            this.showMessage(3000)
             setTimeout(() => {
               this.router.navigate(['/login']);
             }, 2000);
@@ -52,5 +52,13 @@ export class RegisterComponent {
       this.userForm.get(key)?.clearValidators();
       this.userForm.get(key)?.updateValueAndValidity({ onlySelf: true, emitEvent: false });
     });
+  }
+
+  showMessage(duration: number): void {
+    this.message = true;
+
+    setTimeout(() => {
+      this.message = false;
+    }, duration);
   }
 }

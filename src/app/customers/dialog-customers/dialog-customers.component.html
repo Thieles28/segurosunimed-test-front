@@ -1,29 +1,52 @@
 <h2 mat-dialog-title class="negrito">Customers</h2>
 <mat-dialog-content class="mat-typography">
-  <h3 class="text-center">Name</h3>
-  <p class="text-center">{{ customer.name }}</p>
+  <mat-grid-list cols="3" rowHeight="2:1">
+    <mat-grid-tile>
+      <div class="text-center">
+        <h3>Name</h3>
+        <p>{{ customer.name }}</p>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="text-center">
+        <h3>Email</h3>
+        <p>{{ customer.email }}</p>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="text-center">
+        <h3>Gender</h3>
+        <p>{{ customer.gender }}</p>
+      </div>
+    </mat-grid-tile>
 
-  <h3 class="text-center">Email</h3>
-  <p class="text-center">{{ customer.email }}</p>
-
-  <h3 class="text-center">Gender</h3>
-  <p class="text-center">{{ customer.gender }}</p>
-
-  <h3 class="text-center">Addresses</h3>
-  <ng-container *ngFor="let address of customer.addresses">
-    <h3 class="text-center">Street</h3>
-    <p class="text-center">{{ address.street }}</p>
-
-    <h3 class="text-center">City</h3>
-    <p class="text-center">{{ address.city }}</p>
-
-    <h3 class="text-center">State</h3>
-    <p class="text-center">{{ address.state }}</p>
-
-    <h3 class="text-center">Zip</h3>
-    <p class="text-center">{{ address.zipCode }}</p>
-  </ng-container>
-
+    <ng-container *ngFor="let address of customer.addresses">
+      <mat-grid-tile colspan="3">
+        <div class="text-center">
+          <h3>Street</h3>
+          <p>{{ address.street }}</p>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="text-center">
+          <h3>City</h3>
+          <p>{{ address.city }}</p>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="text-center">
+          <h3>State</h3>
+          <p>{{ address.state }}</p>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="text-center">
+          <h3>Zip</h3>
+          <p>{{ address.zipCode }}</p>
+        </div>
+      </mat-grid-tile>
+    </ng-container>
+  </mat-grid-list>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Voltar</button>

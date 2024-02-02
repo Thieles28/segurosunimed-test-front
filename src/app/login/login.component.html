@@ -32,6 +32,10 @@
               Senha incorreta. Por favor, verifique novamente.
             </mat-error>
           </mat-form-field>
+          <div class="alert alert-danger alert-text-danger d-flex fs-14 align-items-center rounded mb-16" role="alert" *ngIf="message">
+            <i-feather name="x-circle" class="text-danger feather-base me-12"></i-feather>
+            Usuário inválido!
+          </div>
 
           <button mat-raised-button class="w-100 me-8 mb-8 fw-normal" color="primary" [disabled]="loginForm.invalid" (click)="authentication()">Enter</button>
         </form>

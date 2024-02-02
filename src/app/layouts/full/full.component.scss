@@ -2,7 +2,8 @@
   height: 100%;
 }
 
-.sidenav {
+.sidenav .sidebar-menu.activelink {
+  background-color: #00995d !important;
   width: 200px;
 }
 
@@ -14,4 +15,10 @@
   position: sticky;
   top: 0;
   z-index: 1;
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+  margin: auto;
 }
